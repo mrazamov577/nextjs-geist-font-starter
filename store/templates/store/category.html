@@ -1,0 +1,120 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}{{ category.name }} - Luxury E-Commerce{% endblock %}
+
+{% block content %}
+<!-- Category Header -->
+<div class="mb-8">
+    <h1 class="text-4xl font-playfair font-bold text-gray-800 dark:text-white mb-4">{{ category.name }}</h1>
+    <div class="flex flex-wrap items-center gap-4">
+        <!-- Sort Options -->
+        <div class="flex items-center space-x-2">
+            <span class="text-gray-600 dark:text-gray-300">Sort by:</span>
+            <select id="sort" onchange="updateSort(this.value)" class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-secondary">
+                <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Newest</option>
+                <option value="price_asc" {% if current_sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price_desc" {% if current_sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                <option value="popular" {% if current_sort == 'popular' %}selected{% endif %}>Most Popular</option>
+            </select>
+        </div>
+        
+        <!-- Filter Options -->
+        <div class="flex items-center space-x-4">
+            <label class="inline-flex items-center cursor-pointer">
+                <input type="checkbox" 
+                       id="discountFilter" 
+                       onchange="updateFilters()"
+                       {% if request.GET.discount %}checked{% endif %}
+                       class="form-checkbox h-5 w-5 text-primary dark:text-secondary rounded border-gray-300 dark:border-gray-600"
+                >
+                <span class="ml-2 text-gray-600 dark:text-gray-300">On Sale</span>
+            </label>
+        </div>
+    </div>
+</div>
+
+<!-- Products Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    {% for product in products %}
+    <a href="{% url 'store:product_detail' product.slug %}" class="block">
+        <div class="card group" data-product-id="{{ product.id }}">
+            <div class="relative aspect-square overflow-hidden">
+                <img src="{{ product.image.url }}" 
+                     alt="{{ product.name }}" 
+                     class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                >
+            {% if product.discount %}
+            <div class="absolute top-4 left-4 bg-red-500 text-white px-2 py-1 rounded-md text-sm">
+                -{{ product.discount }}%
+            </div>
+            {% endif %}
+            <div class="absolute top-4 right-4 space-y-2">
+                <button onclick="addToWishlist('{{ product.id }}')" 
+                        class="w-10 h-10 rounded-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm flex items-center justify-center hover:scale-110 transition-transform duration-200"
+                        data-wishlist-id="{{ product.id }}"
+                >
+                    <i class="fas fa-heart text-gray-600 dark:text-gray-300"></i>
+                </button>
+                <button onclick="addToCart('{{ product.id }}')"
+                        class="w-10 h-10 rounded-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm flex items-center justify-center hover:scale-110 transition-transform duration-200"
+                >
+                    <i class="fas fa-shopping-cart text-gray-600 dark:text-gray-300"></i>
+                </button>
+            </div>
+        </div>
+        <div class="p-4">
+            <h3 class="font-semibold text-gray-800 dark:text-white mb-2">{{ product.name }}</h3>
+            <div class="flex items-baseline gap-2">
+                {% if product.discount %}
+                <span class="text-lg font-bold text-primary dark:text-secondary">${{ product.discounted_price }}</span>
+                <span class="text-sm text-gray-500 line-through">${{ product.price }}</span>
+                {% else %}
+                <span class="text-lg font-bold text-primary dark:text-secondary">${{ product.price }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-span-full text-center py-12">
+        <i class="fas fa-box-open text-4xl text-gray-400 mb-4"></i>
+        <p class="text-gray-600 dark:text-gray-400">No products found in this category.</p>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function updateSort(value) {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('sort', value);
+        window.location.search = urlParams.toString();
+    }
+    
+    function updateFilters() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const discountFilter = document.getElementById('discountFilter');
+        
+        if (discountFilter.checked) {
+            urlParams.set('discount', '1');
+        } else {
+            urlParams.delete('discount');
+        }
+        
+        window.location.search = urlParams.toString();
+    }
+    
+    // Initialize wishlist hearts
+    document.addEventListener('DOMContentLoaded', () => {
+        const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        wishlist.forEach(productId => {
+            const heart = document.querySelector(`[data-wishlist-id="${productId}"]`);
+            if (heart) {
+                heart.querySelector('i').classList.add('text-red-500');
+            }
+        });
+    });
+</script>
+{% endblock %}
