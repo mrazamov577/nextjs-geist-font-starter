@@ -1,0 +1,247 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Luxury E-Commerce{% endblock %}</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        playfair: ['Playfair Display', 'serif'],
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: 'var(--color-primary)',
+                        secondary: 'var(--color-secondary)',
+                    },
+                },
+            },
+        }
+    </script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    
+    <style type="text/tailwindcss">
+        @layer components {
+            .nav-link {
+                @apply flex flex-col items-center justify-center p-2 text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-secondary transition-colors duration-200;
+            }
+            .nav-icon {
+                @apply text-xl mb-1;
+            }
+            .nav-text {
+                @apply text-xs;
+            }
+            .btn-primary {
+                @apply bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90 transition-all duration-200;
+            }
+            .card {
+                @apply bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="font-poppins bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <!-- Desktop Navigation -->
+    <nav class="hidden md:block fixed top-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-md z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <a href="{% url 'store:home' %}" class="text-2xl font-playfair font-bold text-primary dark:text-white">
+                    Luxury Store
+                </a>
+                
+                <div class="flex items-center space-x-8">
+                    <a href="{% url 'store:category' 'tech' %}" class="nav-link">
+                        <i class="fas fa-laptop-code nav-icon"></i>
+                        <span>Tech</span>
+                    </a>
+                    <a href="{% url 'store:category' 'clothes' %}" class="nav-link">
+                        <i class="fas fa-tshirt nav-icon"></i>
+                        <span>Clothes</span>
+                    </a>
+                    <a href="{% url 'store:category' 'cosmetics' %}" class="nav-link">
+                        <i class="fas fa-spa nav-icon"></i>
+                        <span>Cosmetics</span>
+                    </a>
+                    <a href="{% url 'store:category' 'others' %}" class="nav-link">
+                        <i class="fas fa-ellipsis-h nav-icon"></i>
+                        <span>Others</span>
+                    </a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button id="darkModeToggle" class="nav-link">
+                        <i class="fas fa-moon nav-icon"></i>
+                    </button>
+                    <div class="relative group">
+                        <button class="nav-link">
+                            <i class="fas fa-heart nav-icon"></i>
+                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center wishlist-count">0</span>
+                        </button>
+                    </div>
+                    <div class="relative group">
+                        <button class="nav-link">
+                            <i class="fas fa-shopping-cart nav-icon"></i>
+                            <span class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center cart-count">0</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-lg z-50">
+        <div class="grid grid-cols-5 h-16">
+            <a href="{% url 'store:home' %}" class="nav-link">
+                <i class="fas fa-home nav-icon"></i>
+                <span class="nav-text">Home</span>
+            </a>
+            <a href="{% url 'store:category' 'tech' %}" class="nav-link">
+                <i class="fas fa-laptop-code nav-icon"></i>
+                <span class="nav-text">Tech</span>
+            </a>
+            <a href="{% url 'store:category' 'clothes' %}" class="nav-link">
+                <i class="fas fa-tshirt nav-icon"></i>
+                <span class="nav-text">Clothes</span>
+            </a>
+            <a href="{% url 'store:category' 'cosmetics' %}" class="nav-link">
+                <i class="fas fa-spa nav-icon"></i>
+                <span class="nav-text">Cosmetics</span>
+            </a>
+            <a href="{% url 'store:category' 'others' %}" class="nav-link">
+                <i class="fas fa-ellipsis-h nav-icon"></i>
+                <span class="nav-text">Others</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 pt-20 pb-20 min-h-screen">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 shadow-lg mt-8">
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-primary dark:text-white">About Us</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Luxury E-Commerce store offering the finest selection of tech, fashion, and cosmetics.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-primary dark:text-white">Categories</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'store:category' 'tech' %}" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-secondary">Tech</a></li>
+                        <li><a href="{% url 'store:category' 'clothes' %}" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-secondary">Clothes</a></li>
+                        <li><a href="{% url 'store:category' 'cosmetics' %}" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-secondary">Cosmetics</a></li>
+                        <li><a href="{% url 'store:category' 'others' %}" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-secondary">Others</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-primary dark:text-white">Customer Service</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-secondary">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-secondary">FAQs</a></li>
+                        <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-secondary">Shipping Info</a></li>
+                        <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-secondary">Returns</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-primary dark:text-white">Follow Us</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-secondary text-xl">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-secondary text-xl">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-secondary text-xl">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 dark:border-gray-700 mt-8 pt-8 text-center text-gray-600 dark:text-gray-300">
+                <p>&copy; {% now "Y" %} Luxury E-Commerce. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Dark Mode Script -->
+    <script>
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const html = document.documentElement;
+        
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'true' || 
+            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        }
+        
+        darkModeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            localStorage.setItem('darkMode', html.classList.contains('dark'));
+        });
+    </script>
+
+    <!-- Cart and Wishlist Scripts -->
+    <script>
+        // Initialize cart and wishlist from localStorage
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        
+        // Update counters
+        document.querySelectorAll('.cart-count').forEach(el => el.textContent = cart.length);
+        document.querySelectorAll('.wishlist-count').forEach(el => el.textContent = wishlist.length);
+        
+        // Add to cart animation
+        function addToCart(productId) {
+            const product = document.querySelector(`[data-product-id="${productId}"]`);
+            if (product) {
+                product.classList.add('animate-bounce');
+                setTimeout(() => product.classList.remove('animate-bounce'), 1000);
+                
+                cart.push(productId);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                document.querySelectorAll('.cart-count').forEach(el => el.textContent = cart.length);
+            }
+        }
+        
+        // Add to wishlist animation
+        function addToWishlist(productId) {
+            const heart = document.querySelector(`[data-wishlist-id="${productId}"]`);
+            if (heart) {
+                heart.classList.add('text-red-500', 'scale-125');
+                setTimeout(() => heart.classList.remove('scale-125'), 200);
+                
+                if (!wishlist.includes(productId)) {
+                    wishlist.push(productId);
+                    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                    document.querySelectorAll('.wishlist-count').forEach(el => el.textContent = wishlist.length);
+                }
+            }
+        }
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
