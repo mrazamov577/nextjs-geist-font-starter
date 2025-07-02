@@ -1,0 +1,109 @@
+/* Base styles */
+:root {
+    --color-primary: #1a237e;
+    --color-secondary: #ffd700;
+}
+
+.dark {
+    --color-primary: #ffd700;
+    --color-secondary: #1a237e;
+}
+
+/* Typography */
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+}
+
+/* Navigation */
+.nav-link {
+    @apply flex flex-col items-center justify-center p-2 text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-secondary transition-colors duration-200;
+}
+
+.nav-icon {
+    @apply text-xl mb-1;
+}
+
+.nav-text {
+    @apply text-xs;
+}
+
+/* Buttons */
+.btn-primary {
+    @apply bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90 transition-all duration-200;
+}
+
+/* Cards */
+.card {
+    @apply bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200;
+}
+
+/* Dark mode */
+.dark body {
+    @apply bg-gray-900 text-white;
+}
+
+/* Animations */
+@keyframes slide {
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    100% {
+        transform: translateX(-100%) translateY(-100%);
+    }
+}
+
+.animate-slide {
+    animation: slide 20s linear infinite;
+}
+
+/* Hero section background */
+.hero-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23fff' fill-opacity='0.4'%3E%3Cpath d='M36 34h-2v-2h2v2zm0-4h-2v-2h2v2zm-4-2h-2v-2h2v2zm16 4h-2v-2h2v2zm0-4h-2v-2h2v2zm-4-2h-2v-2h2v2zm-16 4h-2v-2h2v2zm0-4h-2v-2h2v2zm-4-2h-2v-2h2v2zm-16 4h-2v-2h2v2zm0-4h-2v-2h2v2zm-4-2h-2v-2h2v2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+    .mobile-nav {
+        @apply fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-lg z-50;
+    }
+}
+
+/* Cart and wishlist badges */
+.badge {
+    @apply absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center;
+}
+
+/* Product card hover effects */
+.product-card:hover img {
+    @apply scale-110;
+}
+
+/* Search bar */
+.search-bar {
+    @apply w-full px-6 py-4 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30 transition-all duration-300;
+}
+
+/* Footer styles */
+.footer-link {
+    @apply text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-secondary;
+}
+
+/* Loading animation */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(-25%);
+        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+        transform: translateY(0);
+        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+}
+
+.animate-bounce {
+    animation: bounce 1s infinite;
+}
